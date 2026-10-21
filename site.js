@@ -86,6 +86,18 @@
     });
   });
 
+  // Блок продажи: фиксируем под сайтом, сайт «уезжает» вверх и открывает его
+  var pitch = document.getElementById('pitch'), site = document.querySelector('.site'), mbar = document.querySelector('.mbar');
+  if (pitch && site) {
+    document.documentElement.classList.add('js-reveal');
+    var fit = function () { site.style.marginBottom = pitch.offsetHeight + 'px'; };
+    fit(); window.addEventListener('resize', fit);
+    if (mbar) window.addEventListener('scroll', function () {
+      var nearEnd = window.scrollY + window.innerHeight > document.documentElement.scrollHeight - pitch.offsetHeight * 0.5;
+      mbar.style.visibility = nearEnd ? 'hidden' : '';
+    }, { passive: true });
+  }
+
   // Вкладки прайса
   document.querySelectorAll('[data-tabs]').forEach(function (bar) {
     var root = bar.parentNode;
