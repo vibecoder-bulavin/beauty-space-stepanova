@@ -135,6 +135,17 @@
       return s.getAttribute('data-q') + ': ' + (v || '-');
     }).join('\n');
   }
+  function detailsOf(form) {
+    return [].slice.call(form.querySelectorAll('[data-label]')).filter(function (e) { return e.value; })
+      .map(function (e) { return e.getAttribute('data-label') + ': ' + e.value; }).join('\n');
+  }
+  // Даты заезда не раньше сегодня; кнопка «Забронювати» у номера подставляет номер в форму
+  var today = new Date().toISOString().slice(0, 10);
+  document.querySelectorAll('input[type=date]').forEach(function (i) { i.min = today; });
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('a[data-room]'), sel = document.querySelector('select[name=room]');
+    if (a && sel) sel.value = a.getAttribute('data-room');
+  });
   document.querySelectorAll('[data-lead]').forEach(function (form) {
     var err = form.querySelector('[data-err]'), btn = form.querySelector('[type=submit]');
     form.addEventListener('submit', function () {
@@ -148,7 +159,7 @@
       var data = {
         name: name, phone: phone, source: form.getAttribute('data-lead'),
         service: form.elements.service ? form.elements.service.value : '',
-        answers: answersOf(form), page: cfg.page,
+        answers: answersOf(form) || detailsOf(form), page: cfg.page,
         utm: [utm.utm_source, utm.utm_medium, utm.utm_campaign, utm.utm_term].filter(Boolean).join(' / '),
         ab_variant: variant
       };
