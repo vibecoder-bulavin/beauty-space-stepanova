@@ -277,12 +277,72 @@ section.alt{background:var(--surface);border-top-color:transparent}
 /* карта сразу видна */
 .map iframe{display:block}
 
-/* блок продажи: лежит под сайтом и открывается из-под футера */
-.site{position:relative;z-index:1;background:var(--bg)}
-.pitch{background:#111;color:#f4f1ec;padding:clamp(56px,9vw,110px) 0 clamp(90px,10vw,120px)}
-.pitch .kicker{color:#c9a96e;margin-bottom:18px}
-.pitch h2{color:#fff;font-size:clamp(2rem,4.6vw,3.6rem);max-width:20ch;margin-bottom:.4em}
-.pitch p{color:rgba(244,241,236,.72);max-width:48ch;font-size:1.05rem}
-.pitch .btn{margin-top:18px;background:#f4f1ec;color:#111}
-.js-reveal .pitch{position:fixed;left:0;right:0;bottom:0;z-index:0}
-.js-reveal .site{box-shadow:0 30px 60px rgba(0,0,0,.25)}
+/* ===== Мини-лендинг Bulavin Studio (только для сайтов на продаже) =====
+   Механика: сайт (.site) лежит поверх, первый экран лендинга (.p-intro) прилипает под ним
+   и открывается, когда сайт уезжает вверх. Остальные блоки (.p-body) наезжают поверх интро. */
+.for-sale .site{position:relative;z-index:2;background:var(--bg);border-radius:0 0 28px 28px;overflow:clip;box-shadow:0 40px 90px rgba(0,0,0,.45)}
+.pitch{
+  --pbg:#0b0b0b;--pink:#f3efe8;--pmuted:rgba(243,239,232,.58);--pline:rgba(243,239,232,.12);--pacc:#d8c49c;
+  position:relative;z-index:1;margin-top:-100vh;margin-top:-100svh;
+  color:var(--pink);font:400 17px/1.55 'Inter Tight',system-ui,sans-serif;-webkit-font-smoothing:antialiased
+}
+.p-intro,.p-body{
+  background-color:var(--pbg);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E")
+}
+.p-intro{position:sticky;top:0;height:100vh;height:100svh;display:flex;align-items:flex-end;
+  background-image:radial-gradient(ellipse 70% 60% at 85% 0%,rgba(216,196,156,.16),transparent 70%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.06'/%3E%3C/svg%3E")}
+/* отступ = экран, на котором интро полностью открыто; дальше p-body наезжает снизу */
+.p-body{position:relative;z-index:2;margin-top:100vh;margin-top:100svh;border-top:1px solid var(--pline);box-shadow:0 -30px 60px rgba(0,0,0,.5)}
+.pwrap{width:min(1240px,100% - 40px);margin-inline:auto}
+.p-intro .pwrap{padding:clamp(72px,10vh,120px) 0 clamp(32px,6vh,60px)}
+
+.pk{margin:0 0 clamp(20px,4vh,36px);font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:var(--pacc)}
+.pitch h2,.pitch h3{color:var(--pink);font-family:'Inter Tight',system-ui,sans-serif;text-transform:none}
+.ph1{margin:0 0 .45em;max-width:15ch;font-weight:500;font-size:clamp(2.7rem,7.6vw,7.4rem);line-height:.94;letter-spacing:-.045em;text-wrap:balance}
+.ph2{margin:0;font-weight:500;font-size:clamp(2rem,4.2vw,3.6rem);line-height:1;letter-spacing:-.035em;position:sticky;top:48px;align-self:start}
+.pitch em{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:400;letter-spacing:-.01em;color:var(--pacc)}
+
+.prow{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap;padding-top:28px;border-top:1px solid var(--pline)}
+.psub{margin:0;max-width:46ch;font-size:1.06rem;color:var(--pmuted)}
+.pbtn{display:inline-flex;align-items:center;gap:14px;padding:19px 30px;border-radius:999px;background:var(--pink);color:#0b0b0b;text-decoration:none;font-weight:500;font-size:1rem;white-space:nowrap;transition:gap .25s,background .25s}
+.pbtn::after{content:"→";font-size:1.1em}
+.pbtn:hover{gap:22px;background:#fff}
+.pscroll{margin:clamp(28px,6vh,56px) 0 0;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--pmuted)}
+.pscroll::after{content:"";display:inline-block;width:56px;height:1px;margin-left:14px;vertical-align:middle;background:var(--pmuted)}
+
+.pticker{overflow:hidden;white-space:nowrap;padding:24px 0;border-bottom:1px solid var(--pline)}
+.pticker div{display:inline-flex;animation:pmq 40s linear infinite}
+.pticker span{padding-right:60px;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:clamp(1.6rem,3.2vw,2.8rem);color:var(--pink)}
+.pticker span::after{content:"✦";margin-left:60px;font-style:normal;font-size:.5em;vertical-align:middle;color:var(--pacc)}
+@keyframes pmq{to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.pticker div{animation:none}}
+
+.psec{display:grid;grid-template-columns:4fr 8fr;gap:clamp(28px,5vw,80px);padding:clamp(72px,11vw,150px) 0;border-bottom:1px solid var(--pline)}
+.pn{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:1.5rem;line-height:1.2;color:var(--pacc)}
+.pinc,.psteps{list-style:none;margin:0;padding:0}
+.pinc li{display:grid;grid-template-columns:72px 1fr;gap:12px;padding:28px 0;border-top:1px solid var(--pline)}
+.pinc li:first-child{padding-top:4px;border-top:0}
+.pitch h3{margin:0 0 6px;font-weight:500;font-size:1.22rem;letter-spacing:-.015em}
+.pinc p,.pw p{margin:0;color:var(--pmuted)}
+.pwhy{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--pline);border:1px solid var(--pline)}
+.pw{padding:clamp(26px,3vw,40px);background:var(--pbg)}
+.pw strong{display:block;margin-bottom:26px;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-weight:400;font-size:clamp(3rem,5.4vw,5.2rem);line-height:.9;letter-spacing:-.02em;color:var(--pacc)}
+.psteps li{display:grid;grid-template-columns:72px 1fr;gap:12px;align-items:baseline;padding:24px 0;border-top:1px solid var(--pline)}
+.psteps li:first-child{padding-top:4px;border-top:0}
+.psteps p{margin:0;font-size:clamp(1.15rem,2vw,1.5rem);letter-spacing:-.01em}
+
+.pfinal{padding:clamp(100px,15vw,200px) 0}
+.pfinal .ph1{max-width:18ch}
+.pfinal .psub{margin-bottom:36px}
+.pfoot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:28px 0 36px;border-top:1px solid var(--pline);font-size:.82rem;letter-spacing:.04em;color:var(--pmuted)}
+.pfoot a{color:var(--pink);text-decoration:none}
+
+@media (max-width:820px){
+  .for-sale .site{border-radius:0 0 20px 20px}
+  .psec{grid-template-columns:1fr}
+  .ph2{position:static}
+  .pwhy{grid-template-columns:1fr}
+  .pinc li,.psteps li{grid-template-columns:48px 1fr}
+  .pbtn{width:100%;justify-content:center}
+}

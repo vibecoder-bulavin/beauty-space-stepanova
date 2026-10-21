@@ -86,15 +86,11 @@
     });
   });
 
-  // Блок продажи: фиксируем под сайтом, сайт «уезжает» вверх и открывает его
-  var pitch = document.getElementById('pitch'), site = document.querySelector('.site'), mbar = document.querySelector('.mbar');
-  if (pitch && site) {
-    document.documentElement.classList.add('js-reveal');
-    var fit = function () { site.style.marginBottom = pitch.offsetHeight + 'px'; };
-    fit(); window.addEventListener('resize', fit);
-    if (mbar) window.addEventListener('scroll', function () {
-      var nearEnd = window.scrollY + window.innerHeight > document.documentElement.scrollHeight - pitch.offsetHeight * 0.5;
-      mbar.style.visibility = nearEnd ? 'hidden' : '';
+  // Блок продажи: прячем мобильную кнопку, когда сайт уехал и открылся лендинг студии
+  var site = document.querySelector('.site'), mbar = document.querySelector('.mbar');
+  if (document.getElementById('pitch') && site && mbar) {
+    window.addEventListener('scroll', function () {
+      mbar.style.visibility = window.scrollY + window.innerHeight > site.offsetHeight + 40 ? 'hidden' : '';
     }, { passive: true });
   }
 
