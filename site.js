@@ -73,7 +73,7 @@
     var a = e.target.closest('a[data-goal]');
     if (!a || a.hasAttribute('data-quiz')) return;
     var g = a.getAttribute('data-goal');
-    if (g === 'whatsapp' && cfg.wa) a.href = wa(cfg.msg + tag);
+    if (g === 'whatsapp' && cfg.wa && a.href.indexOf('text=') < 0) a.href = wa(cfg.msg + tag);
     track('generate_lead', { method: g });
   });
 
@@ -83,6 +83,30 @@
       var f = document.createElement('iframe');
       f.src = b.getAttribute('data-map'); f.title = b.textContent; f.loading = 'lazy';
       b.replaceWith(f);
+    });
+  });
+
+  // Вкладки прайса
+  document.querySelectorAll('[data-tabs]').forEach(function (bar) {
+    var root = bar.parentNode;
+    bar.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-tab]');
+      if (!b) return;
+      bar.querySelectorAll('[data-tab]').forEach(function (x) { x.classList.toggle('on', x === b); });
+      root.querySelectorAll('[data-panel]').forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== b.getAttribute('data-tab'); });
+      track('price_tab', { tab: b.textContent });
+    });
+  });
+
+  // Фильтр портфолио
+  document.querySelectorAll('[data-chips]').forEach(function (bar) {
+    var grid = bar.closest('section').querySelector('[data-portfolio]');
+    bar.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-filter]');
+      if (!b) return;
+      var f = b.getAttribute('data-filter');
+      bar.querySelectorAll('[data-filter]').forEach(function (x) { x.classList.toggle('on', x === b); });
+      grid.querySelectorAll('[data-cat]').forEach(function (fig) { fig.hidden = f !== '*' && fig.getAttribute('data-cat') !== f; });
     });
   });
 
